@@ -1,0 +1,15 @@
+Package: BiasedMatch
+Title: Probability distribution and inference for biased matching problems
+Version: 0.0.0.9000
+Authors@R: 
+    person(given = "Andre",
+           family = "Bonfrer",
+           role = c("aut", "cre"),
+           email = "andre.bonfrer@deakin.edu.au",
+           comment = c(ORCID = "YOUR-ORCID-ID"))
+Description: inference and specification of probability distribution for matching of items drawn from multiple categories, without replacement and with biased.
+License: MIT + file LICENSE
+Encoding: UTF-8
+LazyData: true
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.1.1

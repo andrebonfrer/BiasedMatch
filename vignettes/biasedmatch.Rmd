@@ -1,0 +1,106 @@
+---
+title: "BiasedMatch: Biased Matching in Two‑Urn Sampling Problems"
+author: "Borek Puza and Andre Bonfrer"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{BiasedMatch: Biased Matching in Two‑Urn Sampling Problems}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(BiasedMatch)
+```
+
+# Overview
+
+The `BiasedMatch` package provides functions for studying *biased
+matching problems* where two overlapping urns are sampled without
+replacement.  Given two sets of distinct items and a set of items common
+to both urns, one draws a sample of size \(m_1\) from the first urn and
+\(m_2\) from the second.  Items that are common to both urns may be
+sampled with a higher weight than items unique to either urn.
+
+This vignette outlines the underlying model described by Puza and
+Bonfrer (2018) and illustrates how to compute the probability
+distribution of the number of matches and how to perform Bayesian
+inference for the weight parameters using the Metropolis–Hastings (MH)
+algorithms implemented in the package.
+
+# Probability distribution
+
+The core function \code{PROBM()} returns the probability mass for a
+specific number of matches given the urn sizes and weighting.  One can
+obtain the full distribution, mean and variance with \code{DISTM()}.
+
+```{r prob-dist, echo=TRUE}
+# probability of observing exactly 3 matches when samples of size 12 and 8
+# are drawn from overlapping urns with 16 common items and a weight of 2
+PROBM(m = 3, N1 = 37, N2 = 45, N = 16, m1 = 12, m2 = 8, w = 2)
+
+# full distribution
+dist <- DISTM(N1 = 37, N2 = 45, N = 16, m1 = 12, m2 = 8, w = 2)
+dist$Em  # expected number of matches
+```
+
+Figure \@ref(fig:pmf) plots the probability mass function for this
+example.
+
+```{r pmf, echo=TRUE, fig.cap="Probability mass function for the number of matches", message=FALSE}
+plot(dist$mvec, dist$fmvec, type = "h", lwd = 2,
+     xlab = "Number of matches", ylab = "Probability mass")
+```
+
+# Metropolis–Hastings inference
+
+The MH algorithms sample from the posterior distribution of the weight
+parameters and hyperparameters given observed numbers of matches.  The
+function \code{MHALG()} performs inference assuming all observations
+share a common weight parameter.  Functions \code{RMMHALG()} and
+\code{SMRMMHALG()} extend this to allow regression predictors and
+classes of common weights, respectively.  In practice one should use
+substantially more iterations than in the examples below; these short
+runs merely illustrate the interface.
+
+```{r mh-single, eval=FALSE}
+set.seed(1)
+res <- MHALG(B = 100, J = 1000,
+             N1vec = 37, N2vec = 45, N0vec = 16,
+             M1vec = 12, M2vec = 8, mvec = 3,
+             Cvec = 1, del = 0.1)
+
+head(res$muv)
+```
+
+The function \code{restable()} summarises the posterior draws by
+computing means, modes and credible intervals for each parameter.
+
+```{r restable-example, eval=FALSE}
+restable(res, Bn = 200)
+```
+
+Posterior diagnostic tests can be applied using \code{estprop()} to
+check serial correlation and convergence.
+
+```{r diagnostics-example, eval=FALSE}
+estprop(res, Bn = 200, Jn = 500)
+```
+
+# Licence
+
+`BiasedMatch` is released under the MIT licence.  See the
+\file{LICENSE} file for details.
+
+# References
+
+- Borek Puza & Andre Bonfrer (2018). *A series of two‑urn biased sampling
+  problems*. Communications in Statistics – Theory and Methods,
+  47(1), 80–91.

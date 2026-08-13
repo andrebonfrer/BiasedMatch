@@ -1,1 +1,16 @@
 ^LICENSE\.md$
+^.*\.Rproj$
+^\.Rproj\.user$
+^doc$
+^Meta$
+^\.posit/assistant$
+^BiasedMatch$
+^BiasedMatch_.*\.tar\.gz$
+^\.Rhistory$
+^\.DS_Store$
+^cran-comments\.md$
+^_pkgdown\.yml$
+^docs$
+^\.github$
+^PuzaBonfrer2014\.pdf$
+^data$

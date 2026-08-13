@@ -1,0 +1,25 @@
+url: https://github.com/andrebonfrer/BiasedMatch
+
+template:
+  bootstrap: 5
+
+reference:
+- title: Distribution of the number of matches
+  desc: Probability mass function, full distribution and moments.
+  contents:
+  - PROBM
+  - DISTM
+  - Vmf
+- title: Inference on the bias parameter
+  desc: Likelihood and Bayesian inference for the selection bias w.
+  contents:
+  - inferW
+  - likW
+- title: Hierarchical MCMC inference
+  desc: Metropolis-Hastings samplers and their summaries and diagnostics.
+  contents:
+  - MHALG
+  - RMMHALG
+  - SMRMMHALG
+  - restable
+  - estprop

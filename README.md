@@ -1,46 +1,62 @@
 # BiasedMatch
 
-`BiasedMatch` implements functions for biased matching problems where two
-overlapping sets of items are sampled without replacement and items
-common to both sets are sampled with higher probability.  The package
-computes the probability mass function for the number of matching
-items, its moments and provides Metropolis–Hastings algorithms to
-perform Bayesian inference for the weight parameters.  The code is based
-on the methods described by Puza and Bonfrer (2018).
+<!-- badges: start -->
+<!-- badges: end -->
+
+`BiasedMatch` implements the two-urn biased sampling model of Puza and Bonfrer
+(2018). Two overlapping sets of items are sampled without replacement, with
+items common to both sets given a selection weight that favours their
+inclusion. The package computes the distribution of the number of matching
+items, performs maximum likelihood and Bayesian inference for the bias
+parameter, and provides Metropolis-Hastings samplers for hierarchical
+extensions.
 
 ## Installation
 
-The package is distributed as a source package.  To install it from a
-local directory, run the following in R:
+Install the development version from GitHub:
 
 ```r
-# install required dependencies first
-install.packages(c("BiasedUrn", "mvtnorm", "nortest", "lawstat", "coda"))
-
-# then install BiasedMatch from the local tar.gz
-install.packages("path/to/BiasedMatch", repos = NULL, type = "source")
+# install.packages("remotes")
+remotes::install_github("andrebonfrer/BiasedMatch")
 ```
 
 ## Usage
 
-The probability of obtaining a particular number of matches can be
-computed with `PROBM()`, and the entire distribution with `DISTM()`.
-Metropolis–Hastings algorithms for parameter inference are provided by
-`MHALG()`, `RMMHALG()` and `SMRMMHALG()`.  Summaries and diagnostics
-are available via `restable()` and `estprop()`.
+The full distribution, mean and variance of the number of matches:
 
 ```r
 library(BiasedMatch)
 
-# probability mass for 3 matches
+# Probability of exactly 3 matches (Example 1 of the paper, w = 2)
 PROBM(m = 3, N1 = 37, N2 = 45, N = 16, m1 = 12, m2 = 8, w = 2)
 
-# full distribution
+# Full distribution with mean and variance
 DISTM(N1 = 37, N2 = 45, N = 16, m1 = 12, m2 = 8, w = 2)
 ```
 
-See the package vignette for a detailed introduction and examples.
+Inference on the selection bias `w` from an observed number of matches
+(reproducing the marketing application, Problem 3):
+
+```r
+inferW(m = 13, N1 = 292, N2 = 350, N = 192, m1 = 90, m2 = 59)
+#> $mle              1.5265
+#> $posterior_mode   1.3029
+#> $p_value          0.1737
+```
+
+`likW()` returns the standardised likelihood and posterior curves for
+plotting, and the `MHALG()` family of functions performs hierarchical
+Metropolis-Hastings inference when several experiments are pooled.
+
+See `vignette("biasedmatch")` for a full walkthrough that reproduces the
+tables and figures of the paper.
+
+## Reference
+
+Puza, B. and Bonfrer, A. (2018). A series of two-urn biased sampling problems.
+*Communications in Statistics - Theory and Methods*, 47(1), 80-91.
+<https://doi.org/10.1080/03610926.2017.1300282>
 
 ## Licence
 
-This package is licensed under the MIT License (see `LICENSE`).
+MIT (see the `LICENSE` file).
